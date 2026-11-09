@@ -1,0 +1,177 @@
+import 'package:flutter/material.dart';
+
+void main() => runApp(const MyApp());
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      initialRoute: '/',
+      routes: {
+        '/': (context) => const Dashboard(),
+        '/skills': (context) => const SkillsPage(),
+        '/courses': (context) => const CoursesPage(),
+        '/progress': (context) => const ProgressPage(),
+      },
+    );
+  }
+}
+
+// DASHBOARD
+class Dashboard extends StatelessWidget {
+  const Dashboard({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Student Dashboard')),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(Icons.school, size: 70, color: Colors.blue),
+            const Text('Welcome, Student!',
+                style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold)),
+            const SizedBox(height: 20),
+            for (var item in [
+              ['Programming Skills', '/skills'],
+              ['Completed Courses', '/courses'],
+              ['Learning Progress', '/progress']
+            ])
+              ElevatedButton(
+                onPressed: () => Navigator.pushNamed(context, item[1]),
+                child: Text(item[0]),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// SKILLS PAGE
+class SkillsPage extends StatelessWidget {
+  const SkillsPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Programming Skills')),
+      body: LayoutBuilder(
+        builder: (context, c) => GridView.count(
+          padding: const EdgeInsets.all(16),
+          crossAxisCount: c.maxWidth > 600 ? 3 : 2,
+          crossAxisSpacing: 12,
+          mainAxisSpacing: 12,
+          childAspectRatio: 1,
+          children: const [
+            SkillCard('Flutter', 0.8, Icons.phone_android),
+            SkillCard('Java', 0.7, Icons.code),
+            SkillCard('Python', 0.6, Icons.computer),
+            SkillCard('HTML & CSS', 0.9, Icons.web),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// CUSTOM SKILL WIDGET
+class SkillCard extends StatelessWidget {
+  final String name;
+  final double progress;
+  final IconData icon;
+
+  const SkillCard(this.name, this.progress, this.icon, {super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(10),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(icon, color: Colors.blue, size: 28),
+            const SizedBox(height: 8),
+            Text(name, style: const TextStyle(fontWeight: FontWeight.bold)),
+            const SizedBox(height: 10),
+            LinearProgressIndicator(value: progress),
+            Text('${(progress * 100).toInt()}%'),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// COURSES PAGE
+class CoursesPage extends StatelessWidget {
+  const CoursesPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Completed Courses')),
+      body: ListView(
+        children: const [
+          CourseCard('Flutter Basics', '4 Weeks'),
+          CourseCard('Java Programming', '6 Weeks'),
+          CourseCard('Web Development', '5 Weeks'),
+        ],
+      ),
+    );
+  }
+}
+
+// CUSTOM COURSE WIDGET
+class CourseCard extends StatelessWidget {
+  final String course, duration;
+
+  const CourseCard(this.course, this.duration, {super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      child: ListTile(
+        leading: const Icon(Icons.check_circle, color: Colors.green),
+        title: Text(course),
+        subtitle: Text('Duration: $duration'),
+        trailing:
+            const Text('Completed', style: TextStyle(color: Colors.green)),
+      ),
+    );
+  }
+}
+
+// PROGRESS PAGE
+class ProgressPage extends StatelessWidget {
+  const ProgressPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Learning Progress')),
+      body: const Center(
+        child: Padding(
+          padding: EdgeInsets.all(20),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text('Overall Learning Progress',
+                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
+              SizedBox(height: 20),
+              LinearProgressIndicator(
+                  value: 0.75, minHeight: 15, color: Colors.green),
+              SizedBox(height: 10),
+              Text('75% Completed', style: TextStyle(fontSize: 18)),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
